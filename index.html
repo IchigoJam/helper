@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link rel="icon" href="data:">
+<h1>IchigoJamヘルパー</h1>
+
+<main id=main></main>
+
+<script type="module">
+const conds = {
+  "あかるいとき": "ANA(2)>500",
+  "くらいとき": "ANA(2)<500",
+  "とおいとき": "ANA(2)>500",
+  "ちかいとき": "ANA(2)<500",
+  "ボタンがおされているとき": "BTN()=1",
+  "ボタンがおされていないとき": "BTN()=0",
+};
+const actions = {
+  "LEDをつける": "LED1",
+  "LEDをけす": "LED0",
+  "サーボを左へ": "PWM 2,100",
+  "サーボをまんなかへ": "PWM 2,150",
+  "サーボを右へ": "PWM 2,200",
+};
+
+const cr = (tag, parent) => {
+  const c = document.createElement(tag);
+  parent.appendChild(c);
+  return c;
+};
+
+const makeSelect = (opts) => {
+  const c = cr("select", main);
+  const o = cr("option", c);
+  o.textContent = "-";
+  o.value = "";
+  for (const name in opts) {
+    const val = opts[name];
+    const o = cr("option", c);
+    o.textContent = name;
+    o.value = val;
+  }
+  return c;
+};
+
+const sconds = makeSelect(conds);
+const sactions = makeSelect(actions);
+const span = cr("span", main);
+span.textContent = "そうでなければ";
+const sactionselse = makeSelect(actions);
+const div = cr("div", main);
+div.className = "divij";
+
+const makeProg = () => {
+  const cond = sconds.value;
+  const act = sactions.value;
+  const el = cond ? sactionselse.value : "";
+  div.innerHTML = "10 " + (cond ? "IF " + cond + " " : "") + act + (el ? " ELSE " + el : "") + "<br>20 GOTO 10";
+};
+sconds.onchange = sactions.onchange = sactionselse.onchange = makeProg;
+
+</script>
+
+
+<style>
+@font-face {
+  font-family: "ichigojam";
+  font-style: normal;
+  font-weight: 400;
+  src: local('IchigoJam-1.4'), local('IchigoJam-1.4-Regular'), url("https://cdn.jsdelivr.net/gh/fu-sen/ichigojam-font@20190814/IchigoJam-1.4.woff") format('woff');
+}
+.divij {
+  font-family: "ichigojam";
+  font-size: 16px;
+  line-height: 18px;
+  color: #ffffff;
+  background-color: #000000;
+  white-space: pre-wrap;
+  word-break: break-all;
+  padding: 15px;
+  margin: .5em 0;
+}
+select, span {
+  font-size: 18px;
+  padding: .2em;
+}
+a {
+  color: gray;
+}
+</style>
+
+<hr>
+font: <a href=http://creativecommons.org/licenses/by/4.0/>CC BY</a> <a href=https://ichigojam.net/>IchigoJam</a> / <a href=https://15jamrecipe.jimdofree.com/>🎈 BALLOON | FU-SEN</a> (<a href=https://github.com/fu-sen/ichigojam-font>src on GitHub</a>)<br>
+<a href=https://github.com/ichigojam/helper/>src in JavaScript on GitHub</a><br>
+
